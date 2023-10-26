@@ -1,8 +1,10 @@
 package com.example.TvBackend.Model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name="direccion")
 public class Direccion {
     @Id

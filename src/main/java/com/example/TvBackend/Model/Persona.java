@@ -1,11 +1,18 @@
 package com.example.TvBackend.Model;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
-@Getter
-@Setter
+//@NamedQuery(name="User.findByEmailId", query = "select u from User u where u.email=:email")
+
+
 @Entity
+@Data
+@DynamicUpdate
+@DynamicInsert
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Persona {
     @Id

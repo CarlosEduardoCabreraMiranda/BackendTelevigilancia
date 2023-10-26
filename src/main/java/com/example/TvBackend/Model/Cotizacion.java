@@ -1,13 +1,14 @@
 package com.example.TvBackend.Model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
 
-@Getter
-@Setter
-
+//@Getter
+//@Setter
+@Data
 @Entity
 @Table (name ="cotizacion")
 public class Cotizacion {
