@@ -9,7 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.io.Serializable;
 
 
-@NamedQuery(name="Producto.findByCodigo_producto", query = "select p from Producto p where p.codigo=:codigo")
+@NamedQuery(name="Producto.findProductoByCodigo_producto", query = "select p from Producto p where p.codigo=:codigo")
 
 @Entity
 @DynamicUpdate
@@ -31,14 +31,14 @@ public class Producto implements Serializable {
     private String nombre;
 
     @Column(name = "costo")
-    private float costo;
+    private String costo;
 
     @Column(name = "tipo")
     private String tipo;
 
     public Producto(){}
 
-    public Producto(Integer id, String codigo, String nombre, float costo, String tipo) {
+    public Producto(Integer id, String codigo, String nombre, String costo, String tipo) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;

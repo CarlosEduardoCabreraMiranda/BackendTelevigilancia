@@ -15,8 +15,8 @@ import java.util.Map;
 @RestController
 public class productoRestImpl implements ProductoRest {
     @Autowired
-    com.example.TvBackend.New.Service.productoService productoService;
-    
+    productoService productoService;
+
     public productoRestImpl(com.example.TvBackend.New.Service.productoService productoService) {
         this.productoService = productoService;
     }

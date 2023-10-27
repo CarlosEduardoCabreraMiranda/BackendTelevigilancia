@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Objects;
 
-import static java.lang.Float.parseFloat;
+
 
 @Slf4j
 @Service
@@ -55,7 +55,7 @@ public class productoServiceImpl implements productoService {
         Producto producto = new Producto();
         producto.setCodigo(requestMap.get("codigo"));
         producto.setNombre(requestMap.get("nombre"));
-        producto.setCosto(parseFloat(requestMap.get("costo")));
+        producto.setCosto((requestMap.get("costo")));
         producto.setTipo(requestMap.get("tipo"));
         return producto;
     }

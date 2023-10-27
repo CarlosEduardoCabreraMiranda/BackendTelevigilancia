@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Map;
 
+
 @RequestMapping(path="/producto")
 public interface ProductoRest {
 
