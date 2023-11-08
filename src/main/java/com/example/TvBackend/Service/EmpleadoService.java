@@ -10,14 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+
+import java.util.*;
 
 
 @Service
-public class empleadoService implements IEmpleadoService {
+public class EmpleadoService implements IEmpleadoService {
 
     @Autowired
     private EmpleadoRepository empleadoDao;
@@ -31,31 +29,35 @@ public class empleadoService implements IEmpleadoService {
     public Optional<Empleado> ConseguirUnoPorId(int id) {
         Optional <Empleado> empleado = empleadoDao.findById(id);
         if(empleado.isPresent()){
-            Empleado empleadoAcualizado = new Empleado();
-            empleadoAcualizado.setPrimerNombre(empleado.get().getPrimerNombre());
-            empleadoAcualizado.setSegundoNombre(empleado.get().getSegundoNombre());
-            empleadoAcualizado.setPrimerApellido(empleado.get().getSegundoApellido());
-            empleadoAcualizado.setFechaNacimiento(empleado.get().getFechaNacimiento());
-            empleadoAcualizado.setTelefono(empleado.get().getTelefono());
-            empleadoAcualizado.setDireccion(empleado.get().getDireccion());
-            empleadoAcualizado.setPassword(empleado.get().getPassword());
-            empleadoAcualizado.setFechaIngreso(empleado.get().getFechaIngreso());
-            empleadoAcualizado.setCargo(empleado.get().getCargo());
-            empleadoAcualizado.setSalario(empleado.get().getSalario());
-            empleadoDao.save(empleadoAcualizado);
+            Empleado empleadoActualizado = new Empleado();
+            empleadoActualizado.setPrimerNombre(empleado.get().getPrimerNombre());
+            empleadoActualizado.setSegundoNombre(empleado.get().getSegundoNombre());
+            empleadoActualizado.setPrimerApellido(empleado.get().getPrimerApellido());
+            empleadoActualizado.setPrimerApellido(empleado.get().getSegundoApellido());
+            empleadoActualizado.setFechaNacimiento(empleado.get().getFechaNacimiento());
+            empleadoActualizado.setTelefono(empleado.get().getTelefono());
+            empleadoActualizado.setDireccion(empleado.get().getDireccion());
+            empleadoActualizado.setPassword(empleado.get().getPassword());
+            empleadoActualizado.setFechaIngreso(empleado.get().getFechaIngreso());
+            empleadoActualizado.setCargo(empleado.get().getCargo());
+            empleadoActualizado.setSalario(empleado.get().getSalario());
+            empleadoActualizado.setEstado(empleado.get().getEstado());
+            empleadoDao.save(empleadoActualizado);
+            return empleado;
+        }else{
+            throw new NoSuchElementException("No se encontró un producto con el ID especificado");
         }
-        return empleado;
     }
 
     @Override
     public ResponseEntity<String> registrarEmpleado(Map<String, String> entidad) {
         try {
-            if (entidad.containsKey("primer_nombre") && entidad.containsKey("primer_apellido") &&
+            if (entidad.containsKey("identificacion") && entidad.containsKey("primer_nombre") && entidad.containsKey("primer_apellido") &&
                     entidad.containsKey("fecha_nacimiento") && entidad.containsKey("telefono") &&
                     entidad.containsKey("direccion") && entidad.containsKey("usuario") &&
                     entidad.containsKey("password") && entidad.containsKey("fecha_ingreso") &&
-                    entidad.containsKey("cargo") && entidad.containsKey("salario")) {
-                Empleado empleado = empleadoDao.obtenerPorEmail(entidad.get("usuario"));
+                    entidad.containsKey("cargo") && entidad.containsKey("salario") && entidad.containsKey("estado")) {
+                Empleado empleado = empleadoDao.empleadoPorUsuario(entidad.get("usuario"));
                 if (Objects.isNull(empleado)) {
                     empleadoDao.save(getEmpleadoFromMap(entidad));
                     return Utilidades.getResponseEntity("Registro Exitoso!", HttpStatus.OK);
@@ -72,14 +74,16 @@ public class empleadoService implements IEmpleadoService {
     }
 
     @Override
-    public void delete(int id) {
+    public void deleteEmpleado(int id) {
         empleadoDao.deleteById(id);
     }
     public Empleado getEmpleadoFromMap(Map<String, String> entidad) {
         Empleado empleado = new Empleado();
+        empleado.setIdentificacion(Integer.parseInt(entidad.get("identificacion")));
         empleado.setPrimerNombre(entidad.get("primer_nombre"));
         empleado.setSegundoNombre(entidad.get("segundo_nombre"));
         empleado.setPrimerApellido(entidad.get("primer_apellido"));
+        empleado.setSegundoApellido(entidad.get("segundo_nombre"));
         empleado.setFechaNacimiento(entidad.get("fecha_nacimiento"));
         empleado.setTelefono(entidad.get("telefono"));
         empleado.setDireccion(entidad.get("direccion"));
@@ -88,6 +92,7 @@ public class empleadoService implements IEmpleadoService {
         empleado.setFechaIngreso(entidad.get("fecha_ingreso"));
         empleado.setCargo(entidad.get("cargo"));
         empleado.setSalario(Float.parseFloat((entidad.get("salario"))));
+        empleado.setEstado(Boolean.parseBoolean(entidad.get("estado")));
         return empleado;
     }
 

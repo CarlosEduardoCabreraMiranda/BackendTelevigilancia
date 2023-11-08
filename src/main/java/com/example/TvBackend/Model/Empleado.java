@@ -6,6 +6,7 @@ import lombok.Setter;
 import jakarta.persistence.*;
 
 import java.util.Date;
+@NamedQuery(name = "Empleado.empleadoPorUsuario",query="select e from Empleado as e where e.usuario=:usuario")
 @Data
 @Entity
 @Table(name = "empleado")

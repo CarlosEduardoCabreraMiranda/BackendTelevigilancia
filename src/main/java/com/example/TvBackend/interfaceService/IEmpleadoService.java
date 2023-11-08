@@ -16,6 +16,6 @@ public interface IEmpleadoService {
     public Optional<Empleado> ConseguirUnoPorId(int id);
     public ResponseEntity<String> registrarEmpleado (Map<String, String> requestMap);
 
-    public void delete(int id);
+    public void deleteEmpleado(int id);
 
 }

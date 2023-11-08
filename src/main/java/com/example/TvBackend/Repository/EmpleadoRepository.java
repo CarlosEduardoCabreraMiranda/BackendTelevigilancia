@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 public interface EmpleadoRepository extends CrudRepository<Empleado,Integer>{
-    Empleado obtenerPorEmail(@Param("email")String email);
+    Empleado empleadoPorUsuario(@Param("usuario")String usuario);
 
 }
