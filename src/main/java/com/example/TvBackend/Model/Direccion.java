@@ -9,9 +9,10 @@ import lombok.Data;
 public class Direccion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id ;
+    private int id;
     private String nombreCalle;
     private String numeroLocal;
+    private String codigoPostal;
 
     public Direccion(int id, String nombreCalle, String numeroLocal, String codigoPostal) {
         this.id = id;
@@ -20,7 +21,6 @@ public class Direccion {
         this.codigoPostal = codigoPostal;
     }
 
-    private String codigoPostal;
     public Direccion(){}
 
 

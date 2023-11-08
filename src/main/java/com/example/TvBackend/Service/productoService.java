@@ -3,7 +3,7 @@ package com.example.TvBackend.Service;
 //import com.example.tv_Backend.Model.Empleado;
 import com.example.TvBackend.Model.Producto;
 //import com.example.tv_Backend.Repository.IEmpleado;
-import com.example.TvBackend.Repository.IProducto;
+import com.example.TvBackend.Repository.ProductoRepository;
 //import com.example.tv_Backend.interfaceService.IEmpleadoService;
 import com.example.TvBackend.interfaceService.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class productoService implements IProductoService {
 
     @Autowired
-    private IProducto productoIfc;
+    private ProductoRepository productoIfc;
 
     @Override
     public List<Producto> ConseguirProductos() {return (List<Producto>) productoIfc.findAll();}

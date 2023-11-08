@@ -1,20 +1,10 @@
 package com.example.TvBackend.Model;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
-//@NamedQuery(name="User.findByEmailId", query = "select u from User u where u.email=:email")
-
-
 @Entity
 @Data
-@DynamicUpdate
-@DynamicInsert
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Persona {
+public abstract class Persona extends Auditoria{
     @Id
     private int identificacion;
     private String primerNombre;
@@ -22,23 +12,23 @@ public abstract class Persona {
     private String primerApellido;
     private String segundoApellido;
     private String fechaNacimiento;
-    @ManyToOne
-    private Direccion direccion;
+    private String direccion;
     private String telefono;
-    private String email;
+    private String usuario;
+    private String password;
 
     public Persona(){}
 
-    public Persona(int identificacion, String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, String fechaNacimiento, String telefono, String email) {
+    public Persona(int identificacion, String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, String fechaNacimiento, String direccion, String telefono, String usuario, String password) {
         this.identificacion = identificacion;
         this.primerNombre = primerNombre;
         this.segundoNombre = segundoNombre;
         this.primerApellido = primerApellido;
         this.segundoApellido = segundoApellido;
         this.fechaNacimiento = fechaNacimiento;
-
+        this.direccion = direccion;
         this.telefono = telefono;
-        this.email = email;
+        this.usuario = usuario;
+        this.password = password;
     }
-
 }

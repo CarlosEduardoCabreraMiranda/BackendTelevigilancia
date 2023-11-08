@@ -1,21 +1,22 @@
 package com.example.TvBackend.Model;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
 
-//@Setter
-//@Getter
+import java.util.Date;
 @Data
 @Entity
-@Table (name="empleado")
+@Table(name = "empleado")
 public class Empleado extends Persona {
-        private  String cargo;
-        public Empleado() {}
-
-        public Empleado(String cargo) {
-            this.cargo = cargo;
-        }
-
-
+    private String fechaIngreso;
+    private String cargo;
+    private float salario;
+    public Empleado() {}
+    public Empleado(String fechaIngreso, String cargo, float salario) {
+        this.fechaIngreso = fechaIngreso;
+        this.cargo = cargo;
+        this.salario = salario;
+    }
 }
