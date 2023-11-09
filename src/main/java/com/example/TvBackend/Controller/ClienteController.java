@@ -1,9 +1,11 @@
 package com.example.TvBackend.Controller;
 
+
+import com.example.TvBackend.Model.Cliente;
 import com.example.TvBackend.Model.Empleado;
 import com.example.TvBackend.Utilidades.Utilidades;
 import com.example.TvBackend.constantes.Constantes;
-import com.example.TvBackend.interfaceService.IEmpleadoService;
+import com.example.TvBackend.interfaceService.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,29 +18,29 @@ import java.util.Optional;
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
 @RequestMapping("/televigilancia")
-public class EmpleadoController {
+public class ClienteController {
     @Autowired
-    IEmpleadoService empleadoService;
-    @GetMapping("/getEmpleados")
-    public List<Empleado> index(){
-        return empleadoService.ConseguirEmpleados();
+    IClienteService clienteService;
+
+    @GetMapping("/getClientes")
+    public List<Cliente> index(){
+        return clienteService.obtenerClientes();
     }
-    @PostMapping("/saveEmpleado")
+    @PostMapping("/saveCLiente")
     public ResponseEntity<String> saveEmpleado(@RequestBody(required = true) Map<String, String> requestMap){
         try{
-            return empleadoService.registrarEmpleado(requestMap);
+            return clienteService.registrarCliente(requestMap);
         }catch(Exception ex){
             ex.printStackTrace();
         }
         return Utilidades.getResponseEntity(Constantes.ALGO_PASO_MAL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    @PutMapping("/actualizarEmpleado/{id}")
-    public ResponseEntity<String> actualizarEmpleado(@PathVariable int id, Map<String,String> entidad){
-        return empleadoService.actualizarEmpleado(id, entidad);
+    @PutMapping("/actualizarCliente/{id}")
+    public Optional<Cliente> actualizarEmpleado(@PathVariable int id){
+        return clienteService.ConseguirClientePorId(id);
     }
-    @DeleteMapping("/eliminarEmpleado/{id}")
+    @DeleteMapping("/eliminarCliente/{id}")
     public void eliminarEmpleado(int id){
-        empleadoService.deleteEmpleado(id);
+        clienteService.deleteCliente(id);
     }
-
 }

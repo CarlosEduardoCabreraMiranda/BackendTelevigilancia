@@ -84,7 +84,6 @@ public class ClienteService implements IClienteService {
         cliente.setUsuario(mapCliente.get("usuario"));
         cliente.setPassword(mapCliente.get("password"));
         cliente.setOcupacion(mapCliente.get("ocupacion"));
-        cliente.setEstado(Boolean.parseBoolean(mapCliente.get("estado")));
         return cliente;
     }
 }

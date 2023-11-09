@@ -25,29 +25,7 @@ public class EmpleadoService implements IEmpleadoService {
         return (List<Empleado>) empleadoDao.findAll();
     }
 
-    @Override
-    public Optional<Empleado> ConseguirUnoPorId(int id) {
-        Optional <Empleado> empleado = empleadoDao.findById(id);
-        if(empleado.isPresent()){
-            Empleado empleadoActualizado = new Empleado();
-            empleadoActualizado.setPrimerNombre(empleado.get().getPrimerNombre());
-            empleadoActualizado.setSegundoNombre(empleado.get().getSegundoNombre());
-            empleadoActualizado.setPrimerApellido(empleado.get().getPrimerApellido());
-            empleadoActualizado.setPrimerApellido(empleado.get().getSegundoApellido());
-            empleadoActualizado.setFechaNacimiento(empleado.get().getFechaNacimiento());
-            empleadoActualizado.setTelefono(empleado.get().getTelefono());
-            empleadoActualizado.setDireccion(empleado.get().getDireccion());
-            empleadoActualizado.setPassword(empleado.get().getPassword());
-            empleadoActualizado.setFechaIngreso(empleado.get().getFechaIngreso());
-            empleadoActualizado.setCargo(empleado.get().getCargo());
-            empleadoActualizado.setSalario(empleado.get().getSalario());
-            empleadoActualizado.setEstado(empleado.get().getEstado());
-            empleadoDao.save(empleadoActualizado);
-            return empleado;
-        }else{
-            throw new NoSuchElementException("No se encontró un producto con el ID especificado");
-        }
-    }
+
 
     @Override
     public ResponseEntity<String> registrarEmpleado(Map<String, String> entidad) {
@@ -92,9 +70,65 @@ public class EmpleadoService implements IEmpleadoService {
         empleado.setFechaIngreso(entidad.get("fecha_ingreso"));
         empleado.setCargo(entidad.get("cargo"));
         empleado.setSalario(Float.parseFloat((entidad.get("salario"))));
-        empleado.setEstado(Boolean.parseBoolean(entidad.get("estado")));
         return empleado;
     }
 
+    @Override
+    public ResponseEntity<String> actualizarEmpleado(int id, Map<String, String> entidad) {
+        try {
+            Optional<Empleado> empleadoOptional = empleadoDao.findById(id);
+            if (empleadoOptional.isPresent()) {
+                Empleado empleado = empleadoOptional.get();
 
+                // Actualiza los campos si están presentes en el mapa
+                if (entidad.containsKey("identificacion")) {
+                    empleado.setIdentificacion(Integer.parseInt(entidad.get("identificacion")));
+                }
+                if (entidad.containsKey("primer_nombre")) {
+                    empleado.setPrimerNombre(entidad.get("primer_nombre"));
+                }
+                if (entidad.containsKey("segundo_nombre")) {
+                    empleado.setSegundoNombre(entidad.get("segundo_nombre"));
+                }
+                if (entidad.containsKey("primer_apellido")) {
+                    empleado.setPrimerApellido(entidad.get("primer_apellido"));
+                }
+                if (entidad.containsKey("segundo_apellido")) {
+                    empleado.setSegundoApellido(entidad.get("segundo_apellido"));
+                }
+                if (entidad.containsKey("fecha_nacimiento")) {
+                    empleado.setFechaNacimiento(entidad.get("fecha_nacimiento"));
+                }
+                if (entidad.containsKey("telefono")) {
+                    empleado.setTelefono(entidad.get("telefono"));
+                }
+                if (entidad.containsKey("direccion")) {
+                    empleado.setDireccion(entidad.get("direccion"));
+                }
+                if (entidad.containsKey("usuario")) {
+                    empleado.setUsuario(entidad.get("usuario"));
+                }
+                if (entidad.containsKey("password")) {
+                    empleado.setPassword(entidad.get("password"));
+                }
+                if (entidad.containsKey("fecha_ingreso")) {
+                    empleado.setFechaIngreso(entidad.get("fecha_ingreso"));
+                }
+                if (entidad.containsKey("cargo")) {
+                    empleado.setCargo(entidad.get("cargo"));
+                }
+                if (entidad.containsKey("salario")) {
+                    empleado.setSalario(Float.parseFloat(entidad.get("salario")));
+                }
+
+                empleadoDao.save(empleado);
+                return Utilidades.getResponseEntity("Empleado actualizado correctamente.", HttpStatus.OK);
+            } else {
+                return Utilidades.getResponseEntity("Empleado no encontrado.", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return Utilidades.getResponseEntity(Constantes.ALGO_PASO_MAL, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

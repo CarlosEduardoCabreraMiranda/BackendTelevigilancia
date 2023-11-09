@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Data
 @Entity
 @Table (name = "producto")
-public class Producto extends Auditoria{
+public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigoProducto;
