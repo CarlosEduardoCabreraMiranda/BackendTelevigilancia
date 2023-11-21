@@ -13,8 +13,8 @@ import java.util.Optional;
 public interface IEmpleadoService {
 
     public List<Empleado> ConseguirEmpleados();
-    public Optional<Empleado> ConseguirUnoPorId(int id);
-    public ResponseEntity<String> registrarEmpleado (Map<String, String> requestMap);
+    public Optional<Empleado> ConseguirUnoPorId(int id,Empleado empleado);
+    public ResponseEntity<String> registrarEmpleado (Map<String, String> empleadoMap);
 
     public void deleteEmpleado(int id);
 

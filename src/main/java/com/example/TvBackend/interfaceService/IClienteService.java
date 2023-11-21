@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface IClienteService {
     public List<Cliente> obtenerClientes();
-    public Optional<Cliente> ConseguirClientePorId(int id);
+    public Optional<Cliente> ConseguirClientePorId(int id, Cliente cliente);
     public ResponseEntity<String> registrarCliente(Map<String,String> mapCliente);
     public void deleteCliente(int id);
 }

@@ -5,10 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+
+@NamedQuery(name="Producto.findProductByReference",query ="select p from Producto p where p.referencia=:referencia")
 @Data
 @Entity
 @Table (name = "producto")
-public class Producto extends Auditoria{
+public class Producto{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigoProducto;

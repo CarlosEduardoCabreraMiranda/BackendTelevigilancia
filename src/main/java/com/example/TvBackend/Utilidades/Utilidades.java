@@ -7,6 +7,6 @@ public class Utilidades {
     private Utilidades(){}
 
     public static ResponseEntity<String> getResponseEntity(String responseMessage, HttpStatus httpStatus){
-        return new ResponseEntity<String>("{\"Respuesta:\":\""+responseMessage+"\"}", httpStatus);
+        return new ResponseEntity<String>("Respuesta: "+responseMessage+" HttpEstado: ", httpStatus);
     }
 }

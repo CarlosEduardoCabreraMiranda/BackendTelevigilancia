@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -23,22 +24,28 @@ public class ClienteService implements IClienteService {
     }
 
     @Override
-    public Optional<Cliente> ConseguirClientePorId(int id) {
+    public Optional<Cliente> ConseguirClientePorId(int id,Cliente clien) {
         Optional<Cliente> cliente = clienteDao.findById(id);
         if (cliente.isPresent()) {
             Cliente clienteActualizado = new Cliente();
-            clienteActualizado.setPrimerNombre(cliente.get().getPrimerNombre());
-            clienteActualizado.setSegundoNombre(cliente.get().getSegundoNombre());
-            clienteActualizado.setPrimerApellido(cliente.get().getPrimerApellido());
-            clienteActualizado.setPrimerApellido(cliente.get().getSegundoApellido());
-            clienteActualizado.setFechaNacimiento(cliente.get().getFechaNacimiento());
-            clienteActualizado.setTelefono(cliente.get().getTelefono());
-            clienteActualizado.setDireccion(cliente.get().getDireccion());
-            clienteActualizado.setPassword(cliente.get().getPassword());
-            clienteActualizado.setOcupacion(cliente.get().getOcupacion());
+            clienteActualizado.setIdentificacion(id);
+            clienteActualizado.setPrimerNombre(clien.getPrimerNombre());
+            clienteActualizado.setSegundoNombre(clien.getSegundoNombre());
+            clienteActualizado.setPrimerApellido(clien.getPrimerApellido());
+            clienteActualizado.setSegundoApellido(clien.getSegundoApellido());
+            clienteActualizado.setFechaNacimiento(clien.getFechaNacimiento());
+            clienteActualizado.setTelefono(clien.getTelefono());
+            clienteActualizado.setDireccion(clien.getDireccion());
+            clienteActualizado.setUsuario(cliente.get().getUsuario());
+            clienteActualizado.setPassword(clien.getPassword());
+            clienteActualizado.setOcupacion(clien.getOcupacion());
+            clienteActualizado.setFechaCreacion(cliente.get().getFechaCreacion());
+            clienteActualizado.setEstado(cliente.get().getEstado());
+            clienteActualizado.setFechaModificacion(LocalDateTime.now());
+            clienteDao.save(clienteActualizado);
             return cliente;
         } else {
-            throw new NoSuchElementException("No se encontró un producto con el ID especificado");
+            throw new NoSuchElementException("No se encontró el cliente con el ID especificado");
         }
     }
 
@@ -49,7 +56,7 @@ public class ClienteService implements IClienteService {
                     mapCliente.containsKey("primer_apellido") && mapCliente.containsKey("fecha_nacimiento") &&
                     mapCliente.containsKey("telefono") && mapCliente.containsKey("direccion") &&
                     mapCliente.containsKey("usuario") && mapCliente.containsKey("password") &&
-                    mapCliente.containsKey("ocupacion") && mapCliente.containsKey("estado") ) {
+                    mapCliente.containsKey("ocupacion") ) {
                 Cliente cliente = clienteDao.obtenerPorUsuario("usuario");
                 if (Objects.isNull(cliente)) {
                     clienteDao.save(getClienteFromMap(mapCliente));
@@ -77,14 +84,15 @@ public class ClienteService implements IClienteService {
         cliente.setPrimerNombre(mapCliente.get("primer_nombre"));
         cliente.setSegundoNombre(mapCliente.get("segundo_nombre"));
         cliente.setPrimerApellido(mapCliente.get("primer_apellido"));
-        cliente.setSegundoApellido(mapCliente.get("segundo_nombre"));
+        cliente.setSegundoApellido(mapCliente.get("segundo_apellido"));
         cliente.setFechaNacimiento(mapCliente.get("fecha_nacimiento"));
         cliente.setTelefono(mapCliente.get("telefono"));
         cliente.setDireccion(mapCliente.get("direccion"));
         cliente.setUsuario(mapCliente.get("usuario"));
         cliente.setPassword(mapCliente.get("password"));
         cliente.setOcupacion(mapCliente.get("ocupacion"));
-        cliente.setEstado(Boolean.parseBoolean(mapCliente.get("estado")));
+        cliente.setEstado(true);
+        cliente.setFechaCreacion(LocalDateTime.now());
         return cliente;
     }
 }

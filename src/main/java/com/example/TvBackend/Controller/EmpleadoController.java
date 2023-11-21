@@ -31,12 +31,12 @@ public class EmpleadoController {
         }
         return Utilidades.getResponseEntity(Constantes.ALGO_PASO_MAL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    @PutMapping("/actualizarEmpleado/{id}")
-    public Optional<Empleado> actualizarEmpleado(@PathVariable int id){
-        return empleadoService.ConseguirUnoPorId(id);
+    @PutMapping("/updateEmpleado/{id}")
+    public Optional<Empleado> actualizarEmpleado(@PathVariable int id, @RequestBody Empleado empleado){
+        return empleadoService.ConseguirUnoPorId(id,empleado);
     }
-    @DeleteMapping("/eliminarEmpleado/{id}")
-    public void eliminarEmpleado(int id){
+    @DeleteMapping("/deleteEmpleado/{id}")
+    public void eliminarEmpleado(@PathVariable int id){
         empleadoService.deleteEmpleado(id);
     }
 

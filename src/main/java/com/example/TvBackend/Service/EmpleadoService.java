@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -26,39 +27,39 @@ public class EmpleadoService implements IEmpleadoService {
     }
 
     @Override
-    public Optional<Empleado> ConseguirUnoPorId(int id) {
-        Optional <Empleado> empleado = empleadoDao.findById(id);
-        if(empleado.isPresent()){
+    public Optional<Empleado> ConseguirUnoPorId(int id,Empleado emp) {
+        Optional<Empleado> empleado = empleadoDao.findById(id);
+        if (empleado.isPresent()) {
             Empleado empleadoActualizado = new Empleado();
-            empleadoActualizado.setPrimerNombre(empleado.get().getPrimerNombre());
-            empleadoActualizado.setSegundoNombre(empleado.get().getSegundoNombre());
-            empleadoActualizado.setPrimerApellido(empleado.get().getPrimerApellido());
-            empleadoActualizado.setPrimerApellido(empleado.get().getSegundoApellido());
-            empleadoActualizado.setFechaNacimiento(empleado.get().getFechaNacimiento());
-            empleadoActualizado.setTelefono(empleado.get().getTelefono());
-            empleadoActualizado.setDireccion(empleado.get().getDireccion());
-            empleadoActualizado.setPassword(empleado.get().getPassword());
-            empleadoActualizado.setFechaIngreso(empleado.get().getFechaIngreso());
-            empleadoActualizado.setCargo(empleado.get().getCargo());
-            empleadoActualizado.setSalario(empleado.get().getSalario());
+            empleadoActualizado.setIdentificacion(id);
+            empleadoActualizado.setPrimerNombre(emp.getPrimerNombre());
+            empleadoActualizado.setSegundoNombre(emp.getSegundoNombre());
+            empleadoActualizado.setPrimerApellido(emp.getPrimerApellido());
+            empleadoActualizado.setSegundoApellido(emp.getSegundoApellido());
+            empleadoActualizado.setFechaNacimiento(emp.getFechaNacimiento());
+            empleadoActualizado.setTelefono(emp.getTelefono());
+            empleadoActualizado.setDireccion(emp.getDireccion());
+            empleadoActualizado.setUsuario(empleado.get().getUsuario());
+            empleadoActualizado.setPassword(emp.getPassword());
+            empleadoActualizado.setFechaIngreso(emp.getFechaIngreso());
+            empleadoActualizado.setCargo(emp.getCargo());
+            empleadoActualizado.setSalario(emp.getSalario());
             empleadoActualizado.setEstado(empleado.get().getEstado());
+            empleadoActualizado.setFechaCreacion(empleado.get().getFechaCreacion());
+            empleadoActualizado.setFechaModificacion(LocalDateTime.now());
             empleadoDao.save(empleadoActualizado);
             return empleado;
-        }else{
-            throw new NoSuchElementException("No se encontró un producto con el ID especificado");
+        } else {
+            throw new NoSuchElementException("No se encontró un empleado con el ID especificado");
         }
     }
 
     @Override
     public ResponseEntity<String> registrarEmpleado(Map<String, String> entidad) {
         try {
-            if (entidad.containsKey("identificacion") && entidad.containsKey("primer_nombre") && entidad.containsKey("primer_apellido") &&
-                    entidad.containsKey("fecha_nacimiento") && entidad.containsKey("telefono") &&
-                    entidad.containsKey("direccion") && entidad.containsKey("usuario") &&
-                    entidad.containsKey("password") && entidad.containsKey("fecha_ingreso") &&
-                    entidad.containsKey("cargo") && entidad.containsKey("salario") && entidad.containsKey("estado")) {
+            if (validarInformacion(entidad)) {
                 Empleado empleado = empleadoDao.empleadoPorUsuario(entidad.get("usuario"));
-                if (Objects.isNull(empleado)) {
+                if(Objects.isNull(empleado)) {
                     empleadoDao.save(getEmpleadoFromMap(entidad));
                     return Utilidades.getResponseEntity("Registro Exitoso!", HttpStatus.OK);
                 } else {
@@ -77,13 +78,25 @@ public class EmpleadoService implements IEmpleadoService {
     public void deleteEmpleado(int id) {
         empleadoDao.deleteById(id);
     }
+
+    public boolean validarInformacion(Map<String,String> entidad){
+        if(entidad.containsKey("identificacion") && entidad.containsKey("primer_nombre") && entidad.containsKey("primer_apellido") &&
+                entidad.containsKey("fecha_nacimiento") && entidad.containsKey("telefono") &&
+                entidad.containsKey("direccion") && entidad.containsKey("usuario") &&
+                entidad.containsKey("password") && entidad.containsKey("fecha_ingreso") &&
+                entidad.containsKey("cargo") && entidad.containsKey("salario")){
+            return true;
+        }
+        return false;
+    }
+
     public Empleado getEmpleadoFromMap(Map<String, String> entidad) {
         Empleado empleado = new Empleado();
         empleado.setIdentificacion(Integer.parseInt(entidad.get("identificacion")));
         empleado.setPrimerNombre(entidad.get("primer_nombre"));
         empleado.setSegundoNombre(entidad.get("segundo_nombre"));
         empleado.setPrimerApellido(entidad.get("primer_apellido"));
-        empleado.setSegundoApellido(entidad.get("segundo_nombre"));
+        empleado.setSegundoApellido(entidad.get("segundo_apellido"));
         empleado.setFechaNacimiento(entidad.get("fecha_nacimiento"));
         empleado.setTelefono(entidad.get("telefono"));
         empleado.setDireccion(entidad.get("direccion"));
@@ -92,7 +105,8 @@ public class EmpleadoService implements IEmpleadoService {
         empleado.setFechaIngreso(entidad.get("fecha_ingreso"));
         empleado.setCargo(entidad.get("cargo"));
         empleado.setSalario(Float.parseFloat((entidad.get("salario"))));
-        empleado.setEstado(Boolean.parseBoolean(entidad.get("estado")));
+        empleado.setFechaCreacion(LocalDateTime.now());
+        empleado.setEstado(true);
         return empleado;
     }
 

@@ -1,8 +1,6 @@
 package com.example.TvBackend.Model;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import jakarta.persistence.*;
 
 import java.util.Date;
