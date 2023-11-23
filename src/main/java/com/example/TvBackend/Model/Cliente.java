@@ -10,7 +10,9 @@ import lombok.Data;
 @Table(name="cliente")
 public class Cliente extends Persona{
 
+    @Column(name="ocupacion")
     private String ocupacion;
+
     public Cliente() {}
     public Cliente(String ocupacion) {
         this.ocupacion = ocupacion;

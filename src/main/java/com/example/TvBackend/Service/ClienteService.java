@@ -32,11 +32,11 @@ public class ClienteService implements IClienteService {
         if (cliente.isPresent()) {
             Cliente clienteActualizado = new Cliente();
             clienteActualizado.setIdentificacion(id);
-            clienteActualizado.setPrimerNombre(clien.getPrimerNombre());
-            clienteActualizado.setSegundoNombre(clien.getSegundoNombre());
-            clienteActualizado.setPrimerApellido(clien.getPrimerApellido());
-            clienteActualizado.setSegundoApellido(clien.getSegundoApellido());
-            clienteActualizado.setFechaNacimiento(clien.getFechaNacimiento());
+            clienteActualizado.setPrimer_nombre(clien.getPrimer_nombre());
+            clienteActualizado.setSegundo_nombre(clien.getSegundo_nombre());
+            clienteActualizado.setPrimer_apellido(clien.getPrimer_apellido());
+            clienteActualizado.setSegundo_apellido(clien.getSegundo_apellido());
+            clienteActualizado.setFecha_nacimiento(clien.getFecha_nacimiento());
             clienteActualizado.setTelefono(clien.getTelefono());
             clienteActualizado.setDireccion(clien.getDireccion());
             clienteActualizado.setUsuario(cliente.get().getUsuario());
@@ -91,11 +91,11 @@ public class ClienteService implements IClienteService {
     public Cliente getClienteFromMap(Map<String, String> mapCliente) {
         Cliente cliente = new Cliente();
         cliente.setIdentificacion(Integer.parseInt(mapCliente.get("identificacion")));
-        cliente.setPrimerNombre(mapCliente.get("primer_nombre"));
-        cliente.setSegundoNombre(mapCliente.get("segundo_nombre"));
-        cliente.setPrimerApellido(mapCliente.get("primer_apellido"));
-        cliente.setSegundoApellido(mapCliente.get("segundo_apellido"));
-        cliente.setFechaNacimiento(mapCliente.get("fecha_nacimiento"));
+        cliente.setPrimer_nombre(mapCliente.get("primer_nombre"));
+        cliente.setSegundo_nombre(mapCliente.get("segundo_nombre"));
+        cliente.setPrimer_apellido(mapCliente.get("primer_apellido"));
+        cliente.setSegundo_apellido(mapCliente.get("segundo_apellido"));
+        cliente.setFecha_nacimiento(mapCliente.get("fecha_nacimiento"));
         cliente.setTelefono(mapCliente.get("telefono"));
         cliente.setDireccion(mapCliente.get("direccion"));
         cliente.setUsuario(mapCliente.get("usuario"));

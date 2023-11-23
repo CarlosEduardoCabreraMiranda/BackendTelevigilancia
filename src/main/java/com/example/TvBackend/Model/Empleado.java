@@ -9,12 +9,15 @@ import java.util.Date;
 @Entity
 @Table(name = "empleado")
 public class Empleado extends Persona {
-    private String fechaIngreso;
+    @Column(name = "fecha_ingreso")
+    private String fecha_ingreso;
+    @Column(name = "cargo")
     private String cargo;
+    @Column(name = "salario")
     private float salario;
     public Empleado() {}
-    public Empleado(String fechaIngreso, String cargo, float salario) {
-        this.fechaIngreso = fechaIngreso;
+    public Empleado(String fecha_ingreso, String cargo, float salario) {
+        this.fecha_ingreso = fecha_ingreso;
         this.cargo = cargo;
         this.salario = salario;
     }

@@ -28,7 +28,7 @@ public class ProductoService implements IProductoService {
         Optional<Producto> producto = productoDao.findById(id);
         if(producto.isPresent()){
             Producto productoActualizado = new Producto();
-            productoActualizado.setCodigoProducto(id);
+            productoActualizado.setCodigo_producto(id);
             productoActualizado.setNombre(product.getNombre());
             productoActualizado.setMarca(product.getMarca());
             productoActualizado.setCosto(product.getCosto());
