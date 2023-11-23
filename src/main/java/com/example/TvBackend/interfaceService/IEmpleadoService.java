@@ -12,10 +12,10 @@ import java.util.Optional;
 @SpringBootApplication(scanBasePackages = {"com.example.TvBackend"})
 public interface IEmpleadoService {
 
-    public List<Empleado> ConseguirEmpleados();
-    public Optional<Empleado> ConseguirUnoPorId(int id,Empleado empleado);
-    public ResponseEntity<String> registrarEmpleado (Map<String, String> empleadoMap);
-
+    public List<Empleado> conseguirEmpleados();
+    public Empleado conseguirPorId(int id);
+    public Optional<Empleado> actualizarEmpleado(int id,Empleado empleado);
+    public Empleado registrarEmpleado (Map<String, String> empleadoMap);
     public void deleteEmpleado(int id);
 
 }

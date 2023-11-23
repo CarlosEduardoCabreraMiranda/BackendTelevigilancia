@@ -2,12 +2,10 @@ package com.example.TvBackend.Service;
 
 import com.example.TvBackend.Model.Cliente;
 import com.example.TvBackend.Repository.ClienteRepository;
-import com.example.TvBackend.Utilidades.Utilidades;
 import com.example.TvBackend.constantes.Constantes;
 import com.example.TvBackend.interfaceService.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,7 +22,12 @@ public class ClienteService implements IClienteService {
     }
 
     @Override
-    public Optional<Cliente> ConseguirClientePorId(int id,Cliente clien) {
+    public Cliente conseguirPorId(int id){
+        return clienteDao.findById(id).orElse(null);
+    }
+
+    @Override
+    public Optional<Cliente> actualizarCliente(int id,Cliente clien) {
         Optional<Cliente> cliente = clienteDao.findById(id);
         if (cliente.isPresent()) {
             Cliente clienteActualizado = new Cliente();
@@ -50,32 +53,39 @@ public class ClienteService implements IClienteService {
     }
 
     @Override
-    public ResponseEntity<String> registrarCliente(Map<String, String> mapCliente) {
+    public Cliente registrarCliente(Map<String, String> mapCliente) {
         try {
-            if (mapCliente.containsKey("identificacion") && mapCliente.containsKey("primer_nombre") &&
-                    mapCliente.containsKey("primer_apellido") && mapCliente.containsKey("fecha_nacimiento") &&
-                    mapCliente.containsKey("telefono") && mapCliente.containsKey("direccion") &&
-                    mapCliente.containsKey("usuario") && mapCliente.containsKey("password") &&
-                    mapCliente.containsKey("ocupacion") ) {
+            if (validarInformacion(mapCliente)) {
                 Cliente cliente = clienteDao.obtenerPorUsuario("usuario");
                 if (Objects.isNull(cliente)) {
-                    clienteDao.save(getClienteFromMap(mapCliente));
-                    return Utilidades.getResponseEntity("Registro exitoso!", HttpStatus.OK);
+                    return clienteDao.save(getClienteFromMap(mapCliente));
                 } else {
-                    return Utilidades.getResponseEntity("Email ya existe!", HttpStatus.BAD_REQUEST);
+                    throw new NoSuchElementException("Email ya existe." + HttpStatus.BAD_REQUEST);
                 }
             } else {
-                return Utilidades.getResponseEntity(Constantes.DATO_INVALIDO, HttpStatus.BAD_REQUEST);
+                throw new NoSuchElementException("Datos inválidos." + HttpStatus.BAD_REQUEST);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return Utilidades.getResponseEntity(Constantes.ALGO_PASO_MAL, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new NoSuchElementException(Constantes.ALGO_PASO_MAL + HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public void deleteCliente(int id) {
         clienteDao.deleteById(id);
+    }
+
+    public boolean validarInformacion(Map<String,String> mapCliente){
+        if(mapCliente.containsKey("identificacion") && mapCliente.containsKey("primer_nombre") &&
+                mapCliente.containsKey("primer_apellido") && mapCliente.containsKey("fecha_nacimiento") &&
+                mapCliente.containsKey("telefono") && mapCliente.containsKey("direccion") &&
+                mapCliente.containsKey("usuario") && mapCliente.containsKey("password") &&
+                mapCliente.containsKey("ocupacion") ){
+            return true;
+        }
+        return false;
+
     }
 
     public Cliente getClienteFromMap(Map<String, String> mapCliente) {

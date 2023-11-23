@@ -2,12 +2,10 @@ package com.example.TvBackend.Service;
 
 import com.example.TvBackend.Model.Producto;
 import com.example.TvBackend.Repository.ProductoRepository;
-import com.example.TvBackend.Utilidades.Utilidades;
 import com.example.TvBackend.constantes.Constantes;
 import com.example.TvBackend.interfaceService.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,9 +18,13 @@ public class ProductoService implements IProductoService {
 
     @Override
     public List<Producto> obtenerProductos() {return (List<Producto>) productoDao.findAll();}
+    @Override
+    public Producto conseguirPorId(int id){
+        return productoDao.findById(id).orElse(null);
+    }
 
     @Override
-    public Optional<Producto> ConseguirProductoPorId(int id, Producto product) {
+    public Optional<Producto> actualizarProducto(int id, Producto product) {
         Optional<Producto> producto = productoDao.findById(id);
         if(producto.isPresent()){
             Producto productoActualizado = new Producto();
@@ -41,21 +43,20 @@ public class ProductoService implements IProductoService {
     }
 
     @Override
-    public ResponseEntity<String> registrarProducto(Map<String,String> producto) {
+    public Producto registrarProducto(Map<String,String> producto) {
       try{
           if(validarInformacion(producto)){
               Producto productoReferencia = productoDao.findProductByReference(producto.get("referencia"));
               if(Objects.isNull(productoReferencia)){
-                  productoDao.save(getFromMapProducto(producto));
-                  return Utilidades.getResponseEntity("Registro Exitoso!", HttpStatus.OK);
+                  return productoDao.save(getFromMapProducto(producto));
               }
-              return Utilidades.getResponseEntity("La referencia ya existe!", HttpStatus.BAD_REQUEST);
+              throw new NoSuchElementException("Referencia ya existe" + HttpStatus.BAD_REQUEST);
           }
-          return Utilidades.getResponseEntity(Constantes.DATO_INVALIDO, HttpStatus.BAD_REQUEST);
+          throw new NoSuchElementException("Datos invalidos" + HttpStatus.BAD_REQUEST);
       }catch (Exception e){
           e.printStackTrace();
       }
-        return Utilidades.getResponseEntity(Constantes.ALGO_PASO_MAL, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new NoSuchElementException(Constantes.ALGO_PASO_MAL + HttpStatus.BAD_REQUEST);
     }
 
     @Override

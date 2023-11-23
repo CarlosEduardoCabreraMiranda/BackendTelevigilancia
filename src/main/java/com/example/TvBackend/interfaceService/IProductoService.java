@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface IProductoService {
     public List<Producto> obtenerProductos();
-    public ResponseEntity<String> registrarProducto(Map<String, String> productoMap);
-    public Optional<Producto> ConseguirProductoPorId(int id, Producto producto);
+    public Producto conseguirPorId(int id);
+    public Producto registrarProducto(Map<String, String> productoMap);
+    public Optional<Producto> actualizarProducto(int id, Producto producto);
 
     public void eliminarProducto(int id);
 }

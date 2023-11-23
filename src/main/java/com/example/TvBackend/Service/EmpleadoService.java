@@ -3,12 +3,10 @@ package com.example.TvBackend.Service;
 
 import com.example.TvBackend.Model.Empleado;
 import com.example.TvBackend.Repository.EmpleadoRepository;
-import com.example.TvBackend.Utilidades.Utilidades;
 import com.example.TvBackend.constantes.Constantes;
 import com.example.TvBackend.interfaceService.IEmpleadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,12 +20,17 @@ public class EmpleadoService implements IEmpleadoService {
     private EmpleadoRepository empleadoDao;
 
     @Override
-    public List<Empleado> ConseguirEmpleados() {
+    public List<Empleado> conseguirEmpleados() {
         return (List<Empleado>) empleadoDao.findAll();
     }
 
     @Override
-    public Optional<Empleado> ConseguirUnoPorId(int id,Empleado emp) {
+    public Empleado conseguirPorId (int id){
+        return empleadoDao.findById(id).orElse(null);
+    }
+
+    @Override
+    public Optional<Empleado> actualizarEmpleado(int id,Empleado emp) {
         Optional<Empleado> empleado = empleadoDao.findById(id);
         if (empleado.isPresent()) {
             Empleado empleadoActualizado = new Empleado();
@@ -54,24 +57,25 @@ public class EmpleadoService implements IEmpleadoService {
         }
     }
 
+
     @Override
-    public ResponseEntity<String> registrarEmpleado(Map<String, String> entidad) {
+    public Empleado registrarEmpleado(Map<String, String> entidad) {
         try {
             if (validarInformacion(entidad)) {
                 Empleado empleado = empleadoDao.empleadoPorUsuario(entidad.get("usuario"));
                 if(Objects.isNull(empleado)) {
                     empleadoDao.save(getEmpleadoFromMap(entidad));
-                    return Utilidades.getResponseEntity("Registro Exitoso!", HttpStatus.OK);
+                    return empleado;
                 } else {
-                    return Utilidades.getResponseEntity("Email ya existe!", HttpStatus.BAD_REQUEST);
+                    throw new NoSuchElementException("Usuario ya existe" + HttpStatus.BAD_REQUEST);
                 }
             } else {
-                return Utilidades.getResponseEntity(Constantes.DATO_INVALIDO, HttpStatus.BAD_REQUEST);
+                throw new NoSuchElementException("Datos invalidos" + HttpStatus.BAD_REQUEST);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return Utilidades.getResponseEntity(Constantes.ALGO_PASO_MAL, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new NoSuchElementException(Constantes.ALGO_PASO_MAL + HttpStatus.BAD_REQUEST);
     }
 
     @Override
