@@ -7,7 +7,6 @@ import com.example.TvBackend.interfaceService.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -22,16 +21,21 @@ public class ClienteService implements IClienteService {
     }
 
     @Override
-    public Cliente conseguirPorId(int id){
-        return clienteDao.findById(id).orElse(null);
+    public Optional<Cliente> conseguirPorId(int id){
+        Optional<Cliente> cliente = clienteDao.findById(id);
+        if(!cliente.isPresent()){
+            throw new NoSuchElementException("No se encontró el cliente con el ID especificado");
+        }
+        return cliente;
     }
 
     @Override
     public Optional<Cliente> actualizarCliente(int id,Cliente clien) {
-        Optional<Cliente> cliente = clienteDao.findById(id);
+        Optional<Cliente> cliente = conseguirPorId(id);
         if (cliente.isPresent()) {
             Cliente clienteActualizado = new Cliente();
-            clienteActualizado.setIdentificacion(id);
+            clienteActualizado.setId(id);
+            clienteActualizado.setIdentificacion(clien.getIdentificacion());
             clienteActualizado.setPrimer_nombre(clien.getPrimer_nombre());
             clienteActualizado.setSegundo_nombre(clien.getSegundo_nombre());
             clienteActualizado.setPrimer_apellido(clien.getPrimer_apellido());
@@ -56,12 +60,7 @@ public class ClienteService implements IClienteService {
     public Cliente registrarCliente(Map<String, String> mapCliente) {
         try {
             if (validarInformacion(mapCliente)) {
-                Cliente cliente = clienteDao.obtenerPorUsuario("usuario");
-                if (Objects.isNull(cliente)) {
                     return clienteDao.save(getClienteFromMap(mapCliente));
-                } else {
-                    throw new NoSuchElementException("Email ya existe." + HttpStatus.BAD_REQUEST);
-                }
             } else {
                 throw new NoSuchElementException("Datos inválidos." + HttpStatus.BAD_REQUEST);
             }
@@ -85,12 +84,11 @@ public class ClienteService implements IClienteService {
             return true;
         }
         return false;
-
     }
 
     public Cliente getClienteFromMap(Map<String, String> mapCliente) {
         Cliente cliente = new Cliente();
-        cliente.setIdentificacion(Integer.parseInt(mapCliente.get("identificacion")));
+        cliente.setIdentificacion(mapCliente.get("identificacion"));
         cliente.setPrimer_nombre(mapCliente.get("primer_nombre"));
         cliente.setSegundo_nombre(mapCliente.get("segundo_nombre"));
         cliente.setPrimer_apellido(mapCliente.get("primer_apellido"));

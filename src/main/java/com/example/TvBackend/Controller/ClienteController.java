@@ -21,7 +21,7 @@ public class ClienteController {
         return clienteService.obtenerClientes();
     }
     @GetMapping("/getCliente/{id}")
-    public Cliente getById(@PathVariable int id){
+    public Optional<Cliente> getById(@PathVariable int id){
         return clienteService.conseguirPorId(id);
     }
     @PostMapping("/saveCliente")

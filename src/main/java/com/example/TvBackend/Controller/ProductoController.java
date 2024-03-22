@@ -6,14 +6,16 @@ import com.example.TvBackend.interfaceService.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-@CrossOrigin(origins={"http://localhost:4200"})
+//@CrossOrigin(origins={"http://localhost:4200"})
 @RestController
 @RequestMapping("/televigilancia")
+@CrossOrigin(origins = "*")
 public class ProductoController {
     @Autowired
     IProductoService productoService;
@@ -28,7 +30,7 @@ public class ProductoController {
     @PostMapping("/saveProducto")
     public Producto saveProducto(@RequestBody (required = true) Map<String,String>productoMap){
         try{
-            return productoService.registrarProducto(productoMap);
+                return productoService.registrarProducto(productoMap);
         }catch (Exception ex){
             ex.printStackTrace();
         }

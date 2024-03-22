@@ -34,15 +34,17 @@ public class EmpleadoService implements IEmpleadoService {
         Optional<Empleado> empleado = empleadoDao.findById(id);
         if (empleado.isPresent()) {
             Empleado empleadoActualizado = new Empleado();
-            empleadoActualizado.setIdentificacion(id);
+            empleadoActualizado.setId(id);
+            empleadoActualizado.setIdentificacion(emp.getIdentificacion());
             empleadoActualizado.setPrimer_nombre(emp.getPrimer_nombre());
             empleadoActualizado.setSegundo_nombre(emp.getSegundo_nombre());
             empleadoActualizado.setPrimer_apellido(emp.getPrimer_apellido());
             empleadoActualizado.setSegundo_apellido(emp.getSegundo_apellido());
+            empleadoActualizado.setFoto(emp.getFoto());
             empleadoActualizado.setFecha_nacimiento(emp.getFecha_nacimiento());
             empleadoActualizado.setTelefono(emp.getTelefono());
             empleadoActualizado.setDireccion(emp.getDireccion());
-            empleadoActualizado.setUsuario(empleado.get().getUsuario());
+            empleadoActualizado.setUsuario(emp.getUsuario());
             empleadoActualizado.setPassword(emp.getPassword());
             empleadoActualizado.setFecha_ingreso(emp.getFecha_ingreso());
             empleadoActualizado.setCargo(emp.getCargo());
@@ -61,15 +63,9 @@ public class EmpleadoService implements IEmpleadoService {
     public Empleado registrarEmpleado(Map<String, String> entidad) {
         try {
             if (validarInformacion(entidad)) {
-                Empleado empleado = empleadoDao.empleadoPorUsuario(entidad.get("usuario"));
-                if(Objects.isNull(empleado)) {
-                    empleadoDao.save(getEmpleadoFromMap(entidad));
-                    return empleado;
-                } else {
-                    throw new NoSuchElementException("Usuario ya existe" + HttpStatus.BAD_REQUEST);
-                }
+                    return empleadoDao.save(getEmpleadoFromMap(entidad));
             } else {
-                throw new NoSuchElementException("Datos invalidos" + HttpStatus.BAD_REQUEST);
+                throw new NoSuchElementException("Datos invalidos " + HttpStatus.BAD_REQUEST);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -84,7 +80,7 @@ public class EmpleadoService implements IEmpleadoService {
 
     public boolean validarInformacion(Map<String,String> entidad){
         if(entidad.containsKey("identificacion") && entidad.containsKey("primer_nombre") && entidad.containsKey("primer_apellido") &&
-                entidad.containsKey("fecha_nacimiento") && entidad.containsKey("telefono") &&
+                entidad.containsKey("fecha_nacimiento") && entidad.containsKey("foto") && entidad.containsKey("telefono") &&
                 entidad.containsKey("direccion") && entidad.containsKey("usuario") &&
                 entidad.containsKey("password") && entidad.containsKey("fecha_ingreso") &&
                 entidad.containsKey("cargo") && entidad.containsKey("salario")){
@@ -95,7 +91,7 @@ public class EmpleadoService implements IEmpleadoService {
 
     public Empleado getEmpleadoFromMap(Map<String, String> entidad) {
         Empleado empleado = new Empleado();
-        empleado.setIdentificacion(Integer.parseInt(entidad.get("identificacion")));
+        empleado.setIdentificacion(entidad.get("identificacion"));
         empleado.setPrimer_nombre(entidad.get("primer_nombre"));
         empleado.setSegundo_nombre(entidad.get("segundo_nombre"));
         empleado.setPrimer_apellido(entidad.get("primer_apellido"));
@@ -109,6 +105,7 @@ public class EmpleadoService implements IEmpleadoService {
         empleado.setCargo(entidad.get("cargo"));
         empleado.setSalario(Float.parseFloat((entidad.get("salario"))));
         empleado.setFechaCreacion(LocalDateTime.now());
+        empleado.setFoto(entidad.get("foto"));
         empleado.setEstado(true);
         return empleado;
     }

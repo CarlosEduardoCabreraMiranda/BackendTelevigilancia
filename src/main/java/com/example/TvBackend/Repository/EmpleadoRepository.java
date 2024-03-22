@@ -5,6 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 public interface EmpleadoRepository extends CrudRepository<Empleado,Integer>{
-    Empleado empleadoPorUsuario(@Param("usuario")String usuario);
 
 }

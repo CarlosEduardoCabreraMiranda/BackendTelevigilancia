@@ -1,14 +1,10 @@
 package com.example.TvBackend.Model;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 
-@NamedQuery(name="Producto.findProductByReference",query ="select p from Producto p where p.referencia=:referencia")
 @Data
 @Entity
 @Table (name = "producto")
@@ -19,6 +15,8 @@ public class Producto{
     private int codigo_producto;
     @Column(name="nombre")
     private String nombre;
+    @Column(name="foto",columnDefinition = "LONGTEXT")
+    private String foto;
     @Column(name="marca")
     private String marca;
     @Column(name="costo")
