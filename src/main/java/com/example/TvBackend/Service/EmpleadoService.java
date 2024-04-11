@@ -3,10 +3,12 @@ package com.example.TvBackend.Service;
 
 import com.example.TvBackend.Model.Empleado;
 import com.example.TvBackend.Repository.EmpleadoRepository;
+import com.example.TvBackend.Utilidades.Utilidades;
 import com.example.TvBackend.constantes.Constantes;
 import com.example.TvBackend.interfaceService.IEmpleadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,17 +22,22 @@ public class EmpleadoService implements IEmpleadoService {
     private EmpleadoRepository empleadoDao;
 
     @Override
-    public List<Empleado> conseguirEmpleados() {
+    public List<Empleado> obtenerEmpleadosPorIdentificacionOrPrimerNombreOrPrimerApellido(String palabraClave) {
+        return empleadoDao.getEmpleadosByIdentificacionOrPrimer_nombreOrPrimer_apellido(palabraClave);
+    }
+
+    @Override
+    public List<Empleado> obtenerEmpleados() {
         return (List<Empleado>) empleadoDao.findAll();
     }
 
     @Override
-    public Empleado conseguirPorId (int id){
+    public Empleado obtenerPorId(int id) {
         return empleadoDao.findById(id).orElse(null);
     }
 
     @Override
-    public Optional<Empleado> actualizarEmpleado(int id,Empleado emp) {
+    public Optional<Empleado> actualizarEmpleado(int id, Empleado emp) {
         Optional<Empleado> empleado = empleadoDao.findById(id);
         if (empleado.isPresent()) {
             Empleado empleadoActualizado = new Empleado();
@@ -60,17 +67,23 @@ public class EmpleadoService implements IEmpleadoService {
     }
 
     @Override
-    public Empleado registrarEmpleado(Map<String, String> entidad) {
+    public ResponseEntity<String> registrarEmpleado(Map<String, String> entidad) {
         try {
             if (validarInformacion(entidad)) {
-                    return empleadoDao.save(getEmpleadoFromMap(entidad));
+                Empleado empleadoByIdentificacion = empleadoDao.getByIdentificacion(entidad.get("identificacion"));
+                if(Objects.isNull(empleadoByIdentificacion)) {
+                    empleadoDao.save(getEmpleadoFromMap(entidad));
+                    return Utilidades.getResponseEntity("Empleado guardado con exito!!!", HttpStatus.OK);
+                }else{
+                    return Utilidades.getResponseEntity("Ya existe un empleado con esa identificacion", HttpStatus.CONFLICT);
+                }
             } else {
-                throw new NoSuchElementException("Datos invalidos " + HttpStatus.BAD_REQUEST);
+                return Utilidades.getResponseEntity("Información incompleta, asegurate de enviar todo los datos!", HttpStatus.BAD_REQUEST);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        throw new NoSuchElementException(Constantes.ALGO_PASO_MAL + HttpStatus.BAD_REQUEST);
+        return Utilidades.getResponseEntity(Constantes.ALGO_PASO_MAL ,HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -78,12 +91,12 @@ public class EmpleadoService implements IEmpleadoService {
         empleadoDao.deleteById(id);
     }
 
-    public boolean validarInformacion(Map<String,String> entidad){
-        if(entidad.containsKey("identificacion") && entidad.containsKey("primer_nombre") && entidad.containsKey("primer_apellido") &&
+    public boolean validarInformacion(Map<String, String> entidad) {
+        if (entidad.containsKey("identificacion") && entidad.containsKey("primer_nombre") && entidad.containsKey("primer_apellido") &&
                 entidad.containsKey("fecha_nacimiento") && entidad.containsKey("foto") && entidad.containsKey("telefono") &&
                 entidad.containsKey("direccion") && entidad.containsKey("usuario") &&
                 entidad.containsKey("password") && entidad.containsKey("fecha_ingreso") &&
-                entidad.containsKey("cargo") && entidad.containsKey("salario")){
+                entidad.containsKey("cargo") && entidad.containsKey("salario")) {
             return true;
         }
         return false;

@@ -27,16 +27,22 @@ public class Producto{
     private String garantia;
     @Column(name="referencia")
     private String referencia;
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 
     public Producto(){}
 
-    public Producto(int codigo_producto, String nombre, String marca, float costo, String caracteristicas, String garantia, String referencia) {
+    public Producto(int codigo_producto, String nombre, String foto, String marca, float costo, String caracteristicas, String garantia, String referencia, Categoria categoria) {
         this.codigo_producto = codigo_producto;
         this.nombre = nombre;
+        this.foto = foto;
         this.marca = marca;
         this.costo = costo;
         this.caracteristicas = caracteristicas;
         this.garantia = garantia;
         this.referencia = referencia;
+        this.categoria = categoria;
     }
+
 }

@@ -5,6 +5,7 @@ import com.example.TvBackend.constantes.Constantes;
 import com.example.TvBackend.interfaceService.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,13 +13,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-//@CrossOrigin(origins={"http://localhost:4200"})
 @RestController
 @RequestMapping("/televigilancia")
 @CrossOrigin(origins = "*")
 public class ProductoController {
     @Autowired
     IProductoService productoService;
+
+    @GetMapping("/productos/search")
+    public List<Producto> buscarPorNombreOMarca(String filtro){
+        return productoService.buscarPorNombreOMarca(filtro.toUpperCase());
+    }
+
     @GetMapping("/getProductos")
     public List<Producto> index(){
         return productoService.obtenerProductos();
@@ -28,9 +34,9 @@ public class ProductoController {
         return productoService.conseguirPorId(id);
     }
     @PostMapping("/saveProducto")
-    public Producto saveProducto(@RequestBody (required = true) Map<String,String>productoMap){
+    public ResponseEntity<String> saveProducto(@RequestBody (required = true) Producto productoJson){
         try{
-                return productoService.registrarProducto(productoMap);
+                return productoService.registrarProducto(productoJson);
         }catch (Exception ex){
             ex.printStackTrace();
         }
@@ -41,7 +47,7 @@ public class ProductoController {
         return productoService.actualizarProducto(id, producto);
     }
     @DeleteMapping("/deleteProducto/{id}")
-    public void delete(@PathVariable int id){
-        productoService.eliminarProducto(id);
+    public ResponseEntity<String> delete(@PathVariable int id){
+       return  productoService.eliminarProducto(id);
     }
 }

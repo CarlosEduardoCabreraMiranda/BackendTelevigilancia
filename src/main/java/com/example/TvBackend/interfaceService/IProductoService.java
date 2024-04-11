@@ -9,9 +9,12 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface IProductoService {
+
+    List<Producto> buscarPorNombreOMarca(String filtro);
+
     public List<Producto> obtenerProductos();
     public Producto conseguirPorId(int id);
-    public Producto registrarProducto(Map<String, String> productoMap);
+    public ResponseEntity<String> registrarProducto(Producto productoJson);
     public Optional<Producto> actualizarProducto(int id, Producto producto);
-    public void eliminarProducto(int id);
+    public ResponseEntity<String> eliminarProducto(int id);
 }
